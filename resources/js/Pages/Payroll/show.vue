@@ -15,6 +15,7 @@
     function formattedDate(date){
     return moment(date).format('MMMM   D, YYYY');
     }
+
 </script>
 
 <template>
@@ -103,15 +104,15 @@
                                             <th class="text-center px-4 py-2">Remarks/Reason</th>
                                         </thead>
                                         <tbody>
-                                            <tr class="border-b border-gray-200">
+                                            <tr class="border-b border-gray-200" v-for="cash in payroll.employees.cashAdvance" :key="cash.id">
                                                 <td class="text-center py-2">
-                                                    {{ formattedDate(payroll.employees.cashAdvance.requestDate) }}
+                                                    {{ formattedDate(cash.requestDate) }}
                                                 </td>
                                                 <td class="text-center py-2">
-                                                    {{ payroll.employees.cashAdvance.amount }}
+                                                    ₱{{ cash.amount }}
                                                 </td>
                                                 <td class="text-center py-2">
-                                                    {{ payroll.employees.cashAdvance.status }}
+                                                    {{ cash.status }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -127,15 +128,15 @@
                                             <th class="text-center px-4 py-2">Deduction Type</th>
                                         </thead>
                                         <tbody>
-                                            <tr class="border-b border-gray-200">
+                                            <tr class="border-b border-gray-200" v-for="deduct in payroll.employees.deduction" :key="deduct.id">
                                                 <td class="text-center py-2">
-                                                    {{ formattedDate(payroll.employees.deduction.deductionDate) }}
+                                                    {{ formattedDate(deduct.deductionDate) }}
                                                 </td>
                                                 <td class="text-center py-2">
-                                                    {{ payroll.employees.deduction.deductionAmount }}
+                                                    ₱{{ deduct.deductionAmount }}
                                                 </td>
                                                 <td class="text-center py-2">
-                                                    {{ payroll.employees.deduction.deductionType }}
+                                                    {{ deduct.deductionType }}
                                                 </td>
                                             </tr>
                                         </tbody>

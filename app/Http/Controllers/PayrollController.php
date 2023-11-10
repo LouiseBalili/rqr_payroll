@@ -83,11 +83,7 @@ class PayrollController extends Controller
         $payroll->load('employees.user', 'employees.cashAdvance', 'employees.deduction', 'employees.position');
 
         $filteredCashAdvance = $payroll->employees->cashAdvance->filter(function ($cashAdvance) use ($payroll) {
-            $requestDate = $cashAdvance->requestDate;
-            $payrollStart = $payroll->payrollStart;
-            $payrollEnd = $payroll->payrollEnd;
-
-            return ($requestDate >= $payrollStart) && ($requestDate <= $payrollEnd);
+            return $cashAdvance->requestDate >= $payroll->payrollStart && $cashAdvance->requestDate <= $payroll->payrollEnd;
         })->map(function ($cashAdvance) {
             return [
                 'requestDate' => $cashAdvance->requestDate,
@@ -96,7 +92,18 @@ class PayrollController extends Controller
             ];
         });
 
+        $filteredDeduction = $payroll->employees->deduction->filter(function ($deduction) use ($payroll) {
+            return $deduction->deductionDate >= $payroll->payrollStart && $deduction->deductionDate <= $payroll->payrollEnd;
+        })->map(function ($deduction) {
+            return [
+                'deductionDate' => $deduction->deductionDate,
+                'deductionAmount' => $deduction->deductionAmount,
+                'deductionType' => $deduction->deductionType,
+            ];
+        });
+
         $payroll->employees->cashAdvance = $filteredCashAdvance;
+        $payroll->employees->deduction = $filteredDeduction;
 
         return inertia('Payroll/show', [
             'payroll' => $payroll,
