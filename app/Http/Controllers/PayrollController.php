@@ -15,7 +15,7 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        $payrolls = Payroll::with('employees.user', 'employees.cashAdvance', 'employees.position')->get();
+        $payrolls = Payroll::with('employees.user', 'employees.cashAdvance', 'employees.deduction', 'employees.position')->get();
         return inertia('Payroll/index',[
             'payrolls' => $payrolls
         ]);
@@ -26,7 +26,7 @@ class PayrollController extends Controller
      */
     public function create()
     {
-        $employee = Employee::with('user', 'cashAdvance', 'position')->get();
+        $employee = Employee::with('user', 'cashAdvance', 'deduction', 'position')->get();
 
         return inertia('Payroll/create', [
             'employee' => $employee,
@@ -106,6 +106,16 @@ class PayrollController extends Controller
 
         $payroll->employees->cashAdvance = $filteredCashAdvance;
         $payroll->employees->deduction = $filteredDeduction;
+
+        $totalCashAdvanceAmount = $filteredCashAdvance->sum('amount');
+        $totalDeductionsAmount = $filteredDeduction->sum('deductionAmount');
+
+        $payroll->deductions = $totalDeductionsAmount;
+        $payroll->cashAdvance = $totalCashAdvanceAmount;
+        $payroll->totalDeductions = $totalCashAdvanceAmount + $totalDeductionsAmount;
+
+        $netAmount = (($payroll->daysWorked * $payroll->employees->position->amount) + $payroll->overtimeAmount) - $payroll->totalDeductions;
+        $payroll->netAmount = $netAmount;
 
         return inertia('Payroll/show', [
             'payroll' => $payroll,
