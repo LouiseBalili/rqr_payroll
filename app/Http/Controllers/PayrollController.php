@@ -119,6 +119,7 @@ class PayrollController extends Controller
 
         return inertia('Payroll/show', [
             'payroll' => $payroll,
+            'filteredDeduction' => $filteredDeduction,
         ]);
     }
 

@@ -2,6 +2,7 @@
     import SideBarLayout from '@/Layouts/SideBarLayout.vue'
     import { Head, Link, router, useForm } from '@inertiajs/vue3';
     import moment from 'moment'
+    import { computed } from 'vue';
 
     const props = defineProps({
         employees : Object,
@@ -16,6 +17,19 @@
     return moment(date).format('MMMM   D, YYYY');
     }
 
+    const filterDeductions = () => {
+        return props.payroll.employees.deduction.filter(deduct => {
+            return deduct.deductionDate >= props.payroll.payrollStart && deduct.deductionDate <= props.payroll.payrollEnd;
+        }).map(deduct => {
+            return {
+                deductionDate: deduct.deductionDate,
+                deductionAmount: deduct.deductionAmount,
+                deductionType: deduct.deductionType,
+            };
+        });
+    };
+
+    const filteredDeduction = computed(() => filterDeductions());
 </script>
 
 <template>
@@ -142,7 +156,7 @@
                                             <th class="text-center px-4 py-2">Deduction Type</th>
                                         </thead>
                                         <tbody>
-                                            <tr class="border-b border-gray-200" v-for="deduct in payroll.employees.deduction" :key="deduct.id">
+                                            <tr class="border-b border-gray-200" v-for="deduct in filteredDeduction" :key="deduct.id">
                                                 <td class="text-center py-2">
                                                     {{ formattedDate(deduct.deductionDate) }}
                                                 </td>
