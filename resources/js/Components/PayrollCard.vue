@@ -56,7 +56,7 @@ function viewPayroll() {
             </div>
             <div class="text-right mr-10">
                 <h5 class="mb-2 text-base font-bold tracking-tight text-gray-600 flex items-center ">Net Amount</h5>
-                <h5 class="mb-2 text-base font-bold tracking-tight text-gray-600 flex items-center ml-2.5 -mt-2.5">₱{{ payroll.netAmount}}</h5>
+                <h5 class="mb-2 text-base font-bold tracking-tight text-green-600 flex items-center ml-2.5 -mt-2.5">₱{{ payroll.netAmount}}</h5>
             </div>
         </div>
     </div>

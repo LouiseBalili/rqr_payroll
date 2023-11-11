@@ -82,6 +82,8 @@ class PayrollController extends Controller
     {
         $payroll->load('employees.user', 'employees.cashAdvance', 'employees.deduction', 'employees.position');
 
+        // dd($payroll->payrollStart, $payroll->payrollEnd);
+
         $filteredCashAdvance = $payroll->employees->cashAdvance->filter(function ($cashAdvance) use ($payroll) {
             return $cashAdvance->requestDate >= $payroll->payrollStart && $cashAdvance->requestDate <= $payroll->payrollEnd;
         })->map(function ($cashAdvance) {
